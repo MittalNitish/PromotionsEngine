@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -35,31 +36,56 @@ namespace PromotionEngine
 
             if (foundSkus.Count == SkuCombinationRuleUnits.Count)
             {
-                var discountedCounts = new Dictionary<string, Tuple<int, int>();
-                foreach (var skuCombinationRuleUnit in SkuCombinationRuleUnits)
-                {
-                    var order = orders.Single(t => t.SkuName.Equals(skuCombinationRuleUnit.SkuName));
+                bool hasMinimumQuantity = true;
 
-                    if (order.Quantity >= skuCombinationRuleUnit.Quantity)
+                foreach (var pricedOrder in foundSkus)
+                {
+                    var sku = SkuCombinationRuleUnits.Single(t => t.SkuName.Equals(pricedOrder.SkuName));
+                    if (pricedOrder.Quantity < sku.Quantity)
                     {
-                        var discountCount = order.Quantity / skuCombinationRuleUnit.Quantity;
-                        order.Quantity -= discountCount;
-                        discountedCounts.Add(order.SkuName, discountCount);
+                        hasMinimumQuantity = false;
                     }
-                    else
+                }
+
+                if (hasMinimumQuantity == false)
+                {
+                    //Order does not have minimum quantity from each SKU to process discount
+                    return 0;
+                }
+
+                int discountCount = 0;
+                while (true)
+                {
+                    bool breakOuter = false;
+                    foreach (var pricedOrder in foundSkus)
                     {
-                        //Order doesn't satisfy the minimum quantity, hence return no discount
-                        return 0;
+                        var sku = SkuCombinationRuleUnits.Single(t => t.SkuName.Equals(pricedOrder.SkuName));
+                        if (pricedOrder.Quantity >= sku.Quantity)
+                        {
+                            pricedOrder.Quantity -= sku.Quantity;
+                        }
+                        else
+                        {
+                            breakOuter = true;
+                            break;
+                        }
                     }
+
+                    if (breakOuter)
+                    {
+                        break;
+                    }
+                    ++discountCount;
                 }
 
                 double actualValue = 0;
                 foreach (var pricedOrder in foundSkus)
                 {
-                    actualValue += discountedCounts[pricedOrder.SkuName] * pricedOrder.Price;
+                    actualValue += pricedOrder.Price;
                 }
 
-                discountedValue = DiscountedValue.GetDiscountedValue(actualValue);
+                discountedValue = discountCount * DiscountedValue.GetDiscountedValue(actualValue);
+                
             }
 
             return discountedValue;
