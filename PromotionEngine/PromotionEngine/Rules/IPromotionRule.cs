@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using PromotionEngine.Entities;
 
-namespace PromotionEngine
+namespace PromotionEngine.Rules
 {
     public interface IPromotionRule
     {

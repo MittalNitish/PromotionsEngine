@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using PromotionEngine.Entities;
 
-namespace PromotionEngine
+namespace PromotionEngine.Rules
 {
     public class SingleSkuQuantityRule : IPromotionRule
     {

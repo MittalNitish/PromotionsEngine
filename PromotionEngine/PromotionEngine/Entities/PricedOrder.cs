@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PromotionEngine
+﻿namespace PromotionEngine.Entities
 {
-    public class Order
-    {
-        public string SkuName { get; set; }
-        public int Quantity { get; set; }
-    }
-
     public class PricedOrder : Order
     {
         public double Price { get; set; }

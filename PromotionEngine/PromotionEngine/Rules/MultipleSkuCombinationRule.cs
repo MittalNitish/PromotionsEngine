@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using PromotionEngine.Entities;
 
-namespace PromotionEngine
+namespace PromotionEngine.Rules
 {
     public class MultipleSkuCombinationRule : IPromotionRule
     {
@@ -90,11 +88,5 @@ namespace PromotionEngine
 
             return discountedValue;
         }
-    }
-
-    public class SkuCombinationRuleUnit
-    {
-        public string SkuName { get; set; }
-        public int Quantity { get; set; }
     }
 }
